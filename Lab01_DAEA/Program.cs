@@ -9,7 +9,7 @@ List<Vehiculo> vehiculos = new List<Vehiculo>();
 
 // Se crean los objetos de las clases derivadas y se agregan a la lista (Parte 3)
 vehiculos.Add(new Automovil("Toyota", "Yaris", 2022, "Gasolina"));
-vehiculos.Add(new Camion("Volvo", "FH16", 2020, 25.5));
+vehiculos.Add(new Camion("Volvo", "FH16", 2020, 25.50));
 
 // La flota administra la lista de vehículos (Parte 3)
 Flota flota = new Flota(vehiculos);
@@ -22,14 +22,12 @@ bool salir = false;
 
 while (!salir)
 {
-    Console.WriteLine("===============================================");
-    Console.WriteLine("           GESTION DE FLOTA VEHICULAR          ");
-    Console.WriteLine("===============================================");
-    Console.WriteLine(" 1. Mostrar información de vehículos");
-    Console.WriteLine(" 2. Calcular costo de viaje");
-    Console.WriteLine(" 3. Salir");
-    Console.WriteLine("===============================================");
-    Console.Write("Seleccione una opción: ");
+    Console.WriteLine("========== MENU ==========");
+    Console.WriteLine("1. Mostrar informacion de vehiculos");
+    Console.WriteLine("2. Calcular costo de viaje");
+    Console.WriteLine("3. Salir");
+    Console.WriteLine("==========================");
+    Console.Write("Seleccione una opcion: ");
 
     string? opcion = Console.ReadLine();
 
@@ -45,54 +43,67 @@ while (!salir)
 
         case "3":
             salir = true;
-            Console.WriteLine("\n--> Saliendo del sistema. ¡Hasta pronto!");
+            Console.WriteLine("\nSaliendo del sistema. Hasta pronto!\n");
             break;
 
         default:
-            Console.WriteLine("\n--> Opción inválida. Intente nuevamente.\n");
+            Console.WriteLine("\nOpcion no valida. Elija 1, 2 o 3.\n");
             break;
     }
 }
 
-// Permite elegir un vehículo, solicita la distancia y calcula el costo (Parte 3)
+// Permite elegir un vehículo, solicita los datos del viaje y calcula el costo (Parte 3)
 static void CalcularCostoDeViaje(Flota flota)
 {
     if (flota.Vehiculos.Count == 0)
     {
-        Console.WriteLine("\n--> No hay vehículos disponibles.\n");
+        Console.WriteLine("\nNo hay vehiculos disponibles.\n");
         return;
     }
 
-    Console.WriteLine("\n--- SELECCIONE EL VEHICULO ---");
+    Console.WriteLine("\n=== CALCULO DE COSTO DE VIAJE ===");
     for (int i = 0; i < flota.Vehiculos.Count; i++)
     {
         Vehiculo v = flota.Vehiculos[i];
         Console.WriteLine($"{i + 1}. {v.Marca} {v.Modelo} ({v.Anio})");
     }
-    Console.Write("Opción: ");
 
-    if (!int.TryParse(Console.ReadLine(), out int indice) ||
-        indice < 1 || indice > flota.Vehiculos.Count)
-    {
-        Console.WriteLine("\n--> Vehículo inválido.\n");
-        return;
-    }
-
-    Console.Write("Ingrese la distancia del viaje (Km): ");
-    if (!double.TryParse(Console.ReadLine(), out double distancia) || distancia <= 0)
-    {
-        Console.WriteLine("\n--> Distancia inválida.\n");
-        return;
-    }
+    int indice = LeerEntero($"Seleccione el vehiculo (1 - {flota.Vehiculos.Count}): ", 1, flota.Vehiculos.Count);
+    double distancia = LeerDecimal("Distancia del viaje en km: ");
+    double rendimiento = LeerDecimal("Rendimiento del vehiculo en km por galon: ");
+    double precio = LeerDecimal("Precio del combustible por galon (S/): ");
 
     Vehiculo seleccionado = flota.Vehiculos[indice - 1];
-    double costo = seleccionado.CalcularCostoViaje(distancia); // Enlace dinámico / Polimorfismo
 
-    Console.WriteLine("\n===============================================");
-    Console.WriteLine("            RESULTADO DEL COSTO DE VIAJE       ");
-    Console.WriteLine("===============================================");
-    seleccionado.MostrarInformacion();
-    Console.WriteLine($"Distancia recorrida : {distancia:F2} Km");
-    Console.WriteLine($"COSTO TOTAL DEL VIAJE: S/ {costo:F2}");
-    Console.WriteLine("===============================================\n");
+    Console.WriteLine("\n---- RESULTADO ----");
+    seleccionado.MostrarDetalleCosto(distancia, rendimiento, precio); // Enlace dinámico / Polimorfismo
+    Console.WriteLine("-------------------\n");
+}
+
+// Valida que el usuario ingrese un numero entero dentro del rango permitido
+static int LeerEntero(string mensaje, int minimo, int maximo)
+{
+    while (true)
+    {
+        Console.Write(mensaje);
+        if (int.TryParse(Console.ReadLine(), out int valor) && valor >= minimo && valor <= maximo)
+        {
+            return valor;
+        }
+        Console.WriteLine($"Valor no valido. Ingrese un numero entero entre {minimo} y {maximo}.");
+    }
+}
+
+// Valida que el usuario ingrese un numero mayor a cero
+static double LeerDecimal(string mensaje)
+{
+    while (true)
+    {
+        Console.Write(mensaje);
+        if (double.TryParse(Console.ReadLine(), out double valor) && valor > 0)
+        {
+            return valor;
+        }
+        Console.WriteLine("Valor no valido. Ingrese un numero mayor a 0.");
+    }
 }

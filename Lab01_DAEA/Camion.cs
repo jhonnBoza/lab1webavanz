@@ -6,10 +6,8 @@ internal class Camion : Vehiculo
     // Propiedad Adicional (Parte 1)
     public double CapacidadCarga { get; private set; }
 
-    // Un camión rinde menos y paga recargo por tonelaje
-    private const double RendimientoKmPorGalon = 6.0;
-    private const double PrecioDiesel = 13.20;
-    private const double RecargoPorTonelada = 1.80;
+    // Recargo aplicado por cada tonelada de capacidad de carga
+    private const double RecargoPorTonelada = 15.00;
 
     // Constructor usando 'base' para reutilizar inicialización (Parte 1)
     public Camion(string marca, string modelo, int anio, double capacidadCarga)
@@ -21,15 +19,30 @@ internal class Camion : Vehiculo
     // Sobrescritura del Método (Parte 2)
     public override void MostrarInformacion()
     {
-        Console.WriteLine($"[CAMION]    Marca: {Marca,-10} | Modelo: {Modelo,-10} | Año: {Anio} | Capacidad de Carga: {CapacidadCarga,6:F2} Ton");
+        Console.WriteLine("Tipo   : Camión");
+        base.MostrarInformacion();
+        Console.WriteLine($"Capacidad de carga : {CapacidadCarga:F2} toneladas");
     }
 
-    // Sobrescritura del cálculo de costo (Parte 3)
-    public override double CalcularCostoViaje(double distanciaKm)
+    // El camión suma un recargo por su capacidad de carga (Parte 3)
+    public override double CalcularCostoViaje(double distanciaKm, double rendimientoKmPorGalon, double precioPorGalon)
     {
-        double galones = distanciaKm / RendimientoKmPorGalon;
-        double costoCombustible = galones * PrecioDiesel;
+        double costoCombustible = base.CalcularCostoViaje(distanciaKm, rendimientoKmPorGalon, precioPorGalon);
+        return costoCombustible + (CapacidadCarga * RecargoPorTonelada);
+    }
+
+    // Se agrega la línea del recargo al desglose (Parte 3)
+    public override void MostrarDetalleCosto(double distanciaKm, double rendimientoKmPorGalon, double precioPorGalon)
+    {
+        double galones = distanciaKm / rendimientoKmPorGalon;
+        double costoCombustible = galones * precioPorGalon;
         double recargoCarga = CapacidadCarga * RecargoPorTonelada;
-        return costoCombustible + recargoCarga;
+
+        MostrarInformacion();
+        Console.WriteLine($"Distancia            : {distanciaKm:F2} km");
+        Console.WriteLine($"Combustible          : {galones:F2} galones");
+        Console.WriteLine($"Costo de combustible : S/ {costoCombustible:F2}");
+        Console.WriteLine($"Recargo por carga    : S/ {recargoCarga:F2}");
+        Console.WriteLine($"COSTO TOTAL          : S/ {(costoCombustible + recargoCarga):F2}");
     }
 }

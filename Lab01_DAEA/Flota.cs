@@ -16,7 +16,7 @@ namespace Lab01_DAEA
             listaVehiculos = vehiculos;
         }
 
-        // Acceso de solo lectura para el menú del programa principal
+        // Acceso de solo lectura para el programa principal
         public IReadOnlyList<Vehiculo> Vehiculos => listaVehiculos;
 
         // Método para registrar automóviles o camiones
@@ -30,21 +30,17 @@ namespace Lab01_DAEA
         {
             if (listaVehiculos.Count == 0)
             {
-                Console.WriteLine("\n--> No hay vehículos registrados en la flota.");
+                Console.WriteLine("\n--> No hay vehículos registrados en la flota.\n");
                 return;
             }
 
-            Console.WriteLine("\n===========================================================================================");
-            Console.WriteLine("                            LISTA DE VEHICULOS DE LA FLOTA                                 ");
-            Console.WriteLine("===========================================================================================");
-
-            for (int i = 0; i < listaVehiculos.Count; i++)
+            Console.WriteLine("\n===== FLOTA REGISTRADA =====");
+            foreach (Vehiculo vehiculo in listaVehiculos)
             {
-                Console.Write($"{i + 1}. ");
-                listaVehiculos[i].MostrarInformacion(); // Enlace dinámico / Polimorfismo
+                vehiculo.MostrarInformacion(); // Enlace dinámico / Polimorfismo
+                Console.WriteLine("----------------------------");
             }
-
-            Console.WriteLine("===========================================================================================\n");
+            Console.WriteLine();
         }
     }
 }
