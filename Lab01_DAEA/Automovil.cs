@@ -1,38 +1,35 @@
 namespace Lab01_DAEA;
 
-/// <summary>
-/// Clase derivada de Vehiculo. Agrega el tipo de combustible.
-/// </summary>
-public class Automovil : Vehiculo
+// Clase Derivada: Automovil
+internal class Automovil : Vehiculo
 {
-    private string _combustible;
-
-    public string Combustible { get => _combustible; private set => _combustible = value; }
+    // Propiedad Adicional (Parte 1)
+    public string Combustible { get; private set; }
 
     // Rendimiento promedio de un automóvil (kilómetros por galón)
     private const double RendimientoKmPorGalon = 12.0;
 
-    // El constructor recibe también las propiedades heredadas y las envía con : base(...)
+    // Constructor usando 'base' para reutilizar inicialización (Parte 1)
     public Automovil(string marca, string modelo, int anio, string combustible)
         : base(marca, modelo, anio)
     {
-        _combustible = combustible;
+        Combustible = combustible;
     }
 
+    // Sobrescritura del Método (Parte 2)
     public override void MostrarInformacion()
     {
-        Console.WriteLine("Tipo  : Automóvil");
-        base.MostrarInformacion();          // reutiliza la impresión de la clase padre
-        Console.WriteLine($"Combustible: {Combustible}");
+        Console.WriteLine($"[AUTOMOVIL] Marca: {Marca,-10} | Modelo: {Modelo,-10} | Año: {Anio} | Combustible: {Combustible}");
     }
 
+    // Sobrescritura del cálculo de costo (Parte 3)
     public override double CalcularCostoViaje(double distanciaKm)
     {
         double galones = distanciaKm / RendimientoKmPorGalon;
         return galones * PrecioPorGalon(Combustible);
     }
 
-    /// <summary>Precio referencial del galón según el combustible (S/).</summary>
+    // Precio referencial del galón según el tipo de combustible
     private static double PrecioPorGalon(string combustible) => combustible.ToLower() switch
     {
         "diesel" => 13.20,

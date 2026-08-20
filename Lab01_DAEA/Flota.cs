@@ -1,46 +1,50 @@
-namespace Lab01_DAEA;
-
-/// <summary>
-/// Colección heterogénea: almacena Automovil y Camion bajo el tipo base Vehiculo.
-/// </summary>
-public class Flota
+namespace Lab01_DAEA
 {
-    private readonly List<Vehiculo> _vehiculos;
-
-    public IReadOnlyList<Vehiculo> Vehiculos => _vehiculos;
-
-    public Flota()
+    internal class Flota
     {
-        _vehiculos = new List<Vehiculo>();
-    }
+        // Lista heterogénea de tipo Vehiculo (Parte 2)
+        private List<Vehiculo> listaVehiculos;
 
-    public Flota(List<Vehiculo> vehiculos)
-    {
-        _vehiculos = vehiculos;
-    }
-
-    public void AgregarVehiculo(Vehiculo vehiculo)
-    {
-        _vehiculos.Add(vehiculo);
-    }
-
-    /// <summary>
-    /// Recorre la lista y llama a MostrarInformacion de cada vehículo.
-    /// Gracias al polimorfismo se ejecuta la versión de Automovil o Camion.
-    /// </summary>
-    public void MostrarFlota()
-    {
-        if (_vehiculos.Count == 0)
+        public Flota()
         {
-            Console.WriteLine("La flota no tiene vehículos registrados.");
-            return;
+            listaVehiculos = new List<Vehiculo>();
         }
 
-        for (int i = 0; i < _vehiculos.Count; i++)
+        // Constructor que recibe una lista ya creada
+        public Flota(List<Vehiculo> vehiculos)
         {
-            Console.WriteLine($"--- Vehículo N° {i + 1} ---");
-            _vehiculos[i].MostrarInformacion();
-            Console.WriteLine();
+            listaVehiculos = vehiculos;
+        }
+
+        // Acceso de solo lectura para el menú del programa principal
+        public IReadOnlyList<Vehiculo> Vehiculos => listaVehiculos;
+
+        // Método para registrar automóviles o camiones
+        public void AgregarVehiculo(Vehiculo vehiculo)
+        {
+            listaVehiculos.Add(vehiculo);
+        }
+
+        // Método polimórfico para listar vehículos (Parte 2)
+        public void MostrarFlota()
+        {
+            if (listaVehiculos.Count == 0)
+            {
+                Console.WriteLine("\n--> No hay vehículos registrados en la flota.");
+                return;
+            }
+
+            Console.WriteLine("\n===========================================================================================");
+            Console.WriteLine("                            LISTA DE VEHICULOS DE LA FLOTA                                 ");
+            Console.WriteLine("===========================================================================================");
+
+            for (int i = 0; i < listaVehiculos.Count; i++)
+            {
+                Console.Write($"{i + 1}. ");
+                listaVehiculos[i].MostrarInformacion(); // Enlace dinámico / Polimorfismo
+            }
+
+            Console.WriteLine("===========================================================================================\n");
         }
     }
 }

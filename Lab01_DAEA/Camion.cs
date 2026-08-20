@@ -1,37 +1,35 @@
 namespace Lab01_DAEA;
 
-/// <summary>
-/// Clase derivada de Vehiculo. Agrega la capacidad de carga en toneladas.
-/// </summary>
-public class Camion : Vehiculo
+// Clase Derivada: Camion
+internal class Camion : Vehiculo
 {
-    private double _capacidadCarga;
+    // Propiedad Adicional (Parte 1)
+    public double CapacidadCarga { get; private set; }
 
-    public double CapacidadCarga { get => _capacidadCarga; private set => _capacidadCarga = value; }
-
-    // Un camión rinde menos que un automóvil
+    // Un camión rinde menos y paga recargo por tonelaje
     private const double RendimientoKmPorGalon = 6.0;
     private const double PrecioDiesel = 13.20;
     private const double RecargoPorTonelada = 1.80;
 
+    // Constructor usando 'base' para reutilizar inicialización (Parte 1)
     public Camion(string marca, string modelo, int anio, double capacidadCarga)
         : base(marca, modelo, anio)
     {
-        _capacidadCarga = capacidadCarga;
+        CapacidadCarga = capacidadCarga;
     }
 
+    // Sobrescritura del Método (Parte 2)
     public override void MostrarInformacion()
     {
-        Console.WriteLine("Tipo  : Camión");
-        base.MostrarInformacion();
-        Console.WriteLine($"Capacidad de carga: {CapacidadCarga} toneladas");
+        Console.WriteLine($"[CAMION]    Marca: {Marca,-10} | Modelo: {Modelo,-10} | Año: {Anio} | Capacidad de Carga: {CapacidadCarga,6:F2} Ton");
     }
 
+    // Sobrescritura del cálculo de costo (Parte 3)
     public override double CalcularCostoViaje(double distanciaKm)
     {
         double galones = distanciaKm / RendimientoKmPorGalon;
         double costoCombustible = galones * PrecioDiesel;
-        double recargoCarga = CapacidadCarga * RecargoPorTonelada;   // desgaste y peajes por tonelaje
+        double recargoCarga = CapacidadCarga * RecargoPorTonelada;
         return costoCombustible + recargoCarga;
     }
 }
